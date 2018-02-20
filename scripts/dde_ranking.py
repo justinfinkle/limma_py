@@ -1,3 +1,4 @@
+from pydiffexp import analyze
 import sys
 from pydiffexp import DEAnalysis, DEPlot
 import pandas as pd
@@ -6,15 +7,15 @@ import networkx as nx
 from pydiffexp.gnw.sim_explorer import tsv_to_dg, degree_info, make_perturbations, to_gephi
 import matplotlib.pyplot as plt
 
-
-pd.set_option('display.width', 2000)
 t = [0, 15, 30, 60, 120, 240, 480]
 condition = ['wt', 'ko']
-base_dir = './strongly_connected/'
+base_dir = '../data/insilico/strongly_connected/'
 net_name = 'Yeast-100'
 ko_gene = 'YMR016C'
-p_labels = ['steady', 'high_pos', 'high_neg', 'balanced_pos', 'balanced_neg', 'multi_pos', 'multi_neg', 'multi_mixed']
-perturbations = np.array([[l]*3 for l in p_labels]).flatten()
+
+# Organize perturbations
+perturbations = pd.read_csv("{}labeled_perturbations.csv".format(base_dir), index_col=0)
+p_labels = perturbations.index.values
 
 df, dg = tsv_to_dg("{}Yeast-100.tsv".format(base_dir))
 for perturb in p_labels:
@@ -39,7 +40,7 @@ for perturb in p_labels:
         p_rep_list = np.array([1, 2, 3] * 8)
         ts_p_index = np.ceil((df.index.values+1)/len(times)).astype(int)-1
         ts_rep_list = p_rep_list[ts_p_index]
-        ts_p_list = perturbations[ts_p_index]
+        ts_p_list = p_labels[ts_p_index]
 
         df['perturb'] = ts_p_list
         df['rep'] = ts_rep_list

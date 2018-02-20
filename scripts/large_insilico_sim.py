@@ -9,6 +9,8 @@ from pydiffexp.gnw.sim_explorer import tsv_to_dg, degree_info, make_perturbation
 if __name__ == '__main__':
     jar_loc = '/Users/jfinkle/Documents/Northwestern/MoDyLS/Code/gnw/gnw-3.1.2b.jar'
     base = '/Users/jfinkle/Documents/Northwestern/MoDyLS/Code/Python/pydiffexp/data/insilico/strongly_connected/Yeast-100.tsv'
+    save_path = '/Users/jfinkle/Documents/Northwestern/MoDyLS/Code/Python/pydiffexp/data/insilico/strongly_connected/'
+    save_str = "Yeast-100"
 
     # YMR016C seems like a decent gene to knockout. Not super central, but it has many input/outputs
     ko_gene = 'YMR016C'
@@ -45,30 +47,33 @@ if __name__ == '__main__':
     p_index = ['steady'] * 3 + ['high_pos'] * 3 + ['high_neg'] * 3 + ['balanced_pos'] * 3 + ['balanced_neg'] * 3 + \
               ['multi_pos'] * 3 + ['multi_neg'] * 3 + ['multi_mixed'] * 3
     perturb = pd.DataFrame(perturb, columns=nodes, index=p_index)
-    net = GnwNetwork(dg, jar_path=jar_loc, out_path='.', settings='./strongly_connected/settings.txt', perturbations=perturb)
+    net = GnwNetwork(dg, jar_path=jar_loc, out_path='.', settings=("{}/settings.txt".format(save_path)),
+                     perturbations=perturb)
+    # Save perturbations
+    perturb.to_csv("{}labeled_perturbations.csv".format(save_path))
 
     net.load_sbml(base.replace('.tsv', '.xml'), add_rxn=False)
 
     # Save the wt data
-    save_path = '/Users/jfinkle/Documents/Northwestern/MoDyLS/Code/Python/pydiffexp/data/insilico/strongly_connected/'
+
     mk_ch_dir(save_path)
     net.set_outpath(save_path)
-    net.save_signed_df(filename='Yeast-100_goldstandard_signed.tsv')
-    net.tree.write('Yeast-100_wt.xml')
+    net.save_signed_df(filename='{}_goldstandard_signed.tsv'.format(save_str))
+    net.tree.write('{}_wt.xml'.format(save_str))
 
     # Write the WT and KO SBMLs
     ko_tree = net.tree.make_ko_sbml(ko_gene)
-    ko_tree.write('Yeast-100_ko.xml')
+    ko_tree.write('{}_ko.xml'.format(save_str))
     wt_sim_path = save_path + '/wt_sim/'
     ko_sim_path = save_path + '/ko_sim/'
     mk_ch_dir(wt_sim_path, ch=False)
     mk_ch_dir(ko_sim_path, ch=False)
 
     # Write perturbations
-    net.perturbations.to_csv('{}{}_wt_dream4_timeseries_perturbations.tsv'.format(wt_sim_path, 'Yeast-100'),
+    net.perturbations.to_csv('{}{}_wt_dream4_timeseries_perturbations.tsv'.format(wt_sim_path, save_str),
                            sep='\t', index=False)
-    net.perturbations.to_csv('{}{}_ko_dream4_timeseries_perturbations.tsv'.format(ko_sim_path, 'Yeast-100'),
+    net.perturbations.to_csv('{}{}_ko_dream4_timeseries_perturbations.tsv'.format(ko_sim_path, save_str),
                            sep='\t', index=False)
     # Simulate
-    net.simulate_network(save_path + 'Yeast-100_wt.xml', save_dir=wt_sim_path)
-    net.simulate_network(save_path + 'Yeast-100_ko.xml', save_dir=ko_sim_path)
+    net.simulate_network(save_path + '{}_wt.xml'.format(save_str), save_dir=wt_sim_path)
+    net.simulate_network(save_path + '{}_ko.xml'.format(save_str), save_dir=ko_sim_path)

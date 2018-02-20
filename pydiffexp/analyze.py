@@ -5,7 +5,6 @@ from pydiffexp.utils.io import read_dea_pickle
 from pydiffexp import DEPlot, DEAnalysis, DEResults
 from scipy import stats
 import pydiffexp.utils.fisher_test as ft
-from get_motif_stats import threshold
 import matplotlib.pyplot as plt
 import seaborn as sns
 from datetime import datetime
