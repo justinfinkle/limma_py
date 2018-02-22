@@ -1,17 +1,20 @@
-import os, sys, warnings, itertools
-from typing import Dict
+import itertools
+import os
+import sys
+import warnings
 from collections import Counter
+from typing import Dict
+
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import rpy2.robjects as robjects
 import rpy2.robjects.numpy2ri
-from scipy.stats import zscore
-from rpy2.robjects.packages import importr
-from pydiffexp.utils.utils import int_or_float, grepl
+from natsort import natsorted
 from pydiffexp.utils import multiindex_helpers as mi
 from pydiffexp.utils import rpy2_helpers as rh
-from natsort import natsorted
-import matplotlib.pyplot as plt
+from pydiffexp.utils.utils import int_or_float, grepl
+from rpy2.robjects.packages import importr
 
 # Activate conversion
 rpy2.robjects.numpy2ri.activate()
@@ -327,6 +330,7 @@ class DEAnalysis(object):
         self.contrast_dict = {}             # type: dict
         self.decide = None                  # type: pd.DataFrame
         self.db = None                      # type: pd.DataFrame
+        self.log2 = log2                    # type: bool
 
         if df is not None:
             # Set the data
