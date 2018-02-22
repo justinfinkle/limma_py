@@ -1,4 +1,3 @@
-import os
 import pandas as pd
 from pydiffexp.gnw.results import GnwNetResults
 
@@ -10,4 +9,4 @@ if __name__ == '__main__':
     gnr = GnwNetResults(data_dir)
     t = [0, 15, 30, 60, 120, 240, 480]
     all_stats = gnr.compile_results(censor_times=t)
-    all_stats.to_csv('intermediate_data/sim_stats_censoredtimes.tsv', sep='\t')
+    all_stats.to_csv('../intermediate_data/sim_stats_censoredtimes.tsv', sep='\t')

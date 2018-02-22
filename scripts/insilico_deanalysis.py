@@ -1,11 +1,7 @@
-from pydiffexp import analyze
-import sys, ast
-from pydiffexp import DEAnalysis, DEPlot
-import pandas as pd
 import numpy as np
-import networkx as nx
-from pydiffexp.gnw.sim_explorer import tsv_to_dg, degree_info, make_perturbations, to_gephi
-import matplotlib.pyplot as plt
+import pandas as pd
+from pydiffexp import DEAnalysis
+from pydiffexp.gnw.sim_explorer import tsv_to_dg
 
 
 def get_data(path, c, n_timeseries, reps, perturbation_labels, t=None):
@@ -35,7 +31,6 @@ def get_data(path, c, n_timeseries, reps, perturbation_labels, t=None):
 
 
 if __name__ == '__main__':
-
     t = [0, 15, 30, 60, 120, 240, 480]
     condition = ['wt', 'ko']
     base_dir = '../data/insilico/strongly_connected/'
@@ -63,15 +58,4 @@ if __name__ == '__main__':
                      reference_labels=['condition', 'Time'], log2=False)
 
     dea.fit_contrasts()
-    der = dea.results['ko-wt']
-    scores = der.score_clustering()
-
-    # Remove clusters that have no dynamic DE (i.e. all 1, -1, 0)
-    interesting = scores.loc[scores.Cluster.apply(ast.literal_eval).apply(set).apply(len) > 1]
-    print(interesting)
-    dep = DEPlot()
-
-    for i in interesting.index.values[:10]:
-        dep.tsplot(dea.data.loc[i], legend=False, subgroup='Time')
-
-    plt.show()
+    dea.to_pickle('intermediate_data/strongly_connected_dea.pkl')
