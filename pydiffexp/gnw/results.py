@@ -1,8 +1,9 @@
 import os
 from glob import iglob
-from scipy import stats
-import pandas as pd
+
 import numpy as np
+import pandas as pd
+from scipy import stats
 
 
 def augment_multiindex(df: pd.DataFrame, key, idx_name=''):
@@ -61,10 +62,10 @@ class GnwNetResults(object):
             print(ii)
 
             # Get the data
-            exp = GnwSimResults(path=path, id=id, condition=self.experimental, sim_suffix=sim_suffix,
+            exp = GnwSimResults(path=path, sim_number=id, condition=self.experimental, sim_suffix=sim_suffix,
                                 perturb_suffix=perturb_suffix, censor_times=censor_times)
 
-            ctrl = GnwSimResults(path=path, id=id, condition=self.control, sim_suffix=sim_suffix,
+            ctrl = GnwSimResults(path=path, sim_number=id, condition=self.control, sim_suffix=sim_suffix,
                                  perturb_suffix=perturb_suffix, censor_times=censor_times)
 
             # Get results and save them
@@ -122,10 +123,10 @@ class GnwSimResults(object):
     """
     Load, manage, and analyze results from the GeneNetWeaver simulation results
     """
-    def __init__(self, path, id, condition, sim_suffix='dream4_timeseries.tsv',
-                 perturb_suffix="dream4_timeseries_perturbations.tsv", censor_times=None):
+    def __init__(self, path, sim_number, condition, sim_suffix='dream4_timeseries.tsv',
+                 perturb_suffix="dream4_timeseries_perturbations.tsv",censor_times=None):
         self.path = path
-        self.id = id
+        self.id = sim_number
         self.condition = condition
         self.sim_suffix = sim_suffix
         self.perturb_suffix = perturb_suffix
@@ -152,6 +153,7 @@ class GnwSimResults(object):
         :param p_data: path for the perturbation data
         :return:
         """
+
         if ts_data is None:
             ts_data = '{base}/{c}_sim/{id}_{c}_{s}'.format(base=self.path, c=self.condition, id=self.id,
                                                            s=self.sim_suffix)
@@ -206,6 +208,7 @@ class GnwSimResults(object):
         """
         Only analyze certain timepoints
         :param times: list of times to keep in the analysis
+        :param data:
         :return:
         """
         if times is None:

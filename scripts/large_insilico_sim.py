@@ -1,10 +1,8 @@
-import sys
 import pandas as pd
 import numpy as np
-import networkx as nx
-from gnw.GnwWrapper import GnwNetwork, mk_ch_dir
-from pydiffexp.gnw.sim_explorer import tsv_to_dg, degree_info, make_perturbations, to_gephi
-
+import pandas as pd
+from gnw.simulation import GnwNetwork, mk_ch_dir
+from pydiffexp.gnw.sim_explorer import tsv_to_dg, degree_info, make_perturbations
 
 if __name__ == '__main__':
     jar_loc = '/Users/jfinkle/Documents/Northwestern/MoDyLS/Code/gnw/gnw-3.1.2b.jar'
