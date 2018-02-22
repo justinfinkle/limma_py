@@ -81,6 +81,7 @@ if __name__ == '__main__':
     unsigned_path = directory + 'unique_wc_3node_unsigned_noself_nets.pkl'
     output_base = directory + 'gnw_networks/'
     sim_settings = output_base + 'settings.txt'
+    ko_gene = 'G'
 
     # Get unique network pickle
     # Expected dictionary of the form {num_edges: [list of networkx graphs]}
@@ -109,6 +110,7 @@ if __name__ == '__main__':
 
         # Save initial network info
         # n to signed
+        #todo: this fails when the number of networks is made is greater than the number of unique graphs
         if os.path.isfile('{}_goldstandard_signed.tsv'.format(sim_counter)):
             print(sim_counter)
             sim_counter += 1
@@ -148,7 +150,7 @@ if __name__ == '__main__':
 
             # Write the WT and KO SBMLs
             combo_tree.write(wt_filename)
-            ko_tree = combo_tree.make_ko_sbml('sprouty')
+            ko_tree = combo_tree.make_ko_sbml(ko_gene)
             ko_tree.write(ko_filename)
             wt_sim_path = save_path + '/wt_sim/'
             ko_sim_path = save_path + '/ko_sim/'
@@ -167,7 +169,7 @@ if __name__ == '__main__':
 
             # Save the information
             feature_info = {'net': sim_counter, 'unsigned_group': ug_num,
-                            'x_in': 0, 'y_in': 0, 'sprouty_in': 0}
+                            'x_in': 0, 'y_in': 0, '{}_in'.format(ko_gene): 0}
             for source, target, data in g.in_edges(data=True):
                 feature_info['{}->{}'.format(source, target)] = data['sign']
                 feature_info['{}_in'.format(target)] += 1

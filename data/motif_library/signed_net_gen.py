@@ -43,13 +43,15 @@ def make_possible_edge_list(parents, children, self_edges=True):
     return possible_edge_list
 
 # Define nodes
-nodes = np.array(['x', 'YMR016C', 'y'])
+nodes = np.array(['x', 'G', 'y'])
 
 # Get possible edges
 edges = make_possible_edge_list(nodes, nodes, self_edges=False)
 df = pd.DataFrame(edges, columns=['source', 'target'])
 df['edge'] = edges
-edge_values = list(it.product([0, 1, -1], repeat=len(edges)))
+
+# Add/remove -1 to make signed/unsigned
+edge_values = list(it.product([0, 1], repeat=len(edges)))
 
 # Edge matching function
 em = iso.numerical_edge_match('sign', 0)
@@ -95,4 +97,4 @@ for ii, ev in enumerate(edge_values):
 
 print('# Graphs: ', len(combos))
 print('# Graphs with Complex Interactions:', sum(combos))
-pd.to_pickle(unique_graphs, './unique_wc_3node_signed_noself_nets.pkl')
+pd.to_pickle(unique_graphs, './unique_wc_3node_unsigned_noself_nets.pkl')
