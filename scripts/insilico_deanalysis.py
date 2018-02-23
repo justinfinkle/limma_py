@@ -53,9 +53,23 @@ if __name__ == '__main__':
     idx = pd.IndexSlice
     full_dea = DEAnalysis(data.sort_index().loc[idx[:, :, perturb, :], :].T, time='Time', replicate='rep',
                           reference_labels=['condition', 'Time'], log2=False)
+
+    steady_dea = DEAnalysis(data.sort_index().loc[idx[:, :, 'steady', :], :].T, time='Time', replicate='rep',
+                          reference_labels=['condition', 'Time'], log2=False)
+
+    steady_censored_dea = DEAnalysis(data.sort_index().loc[idx[:, :, 'steady', t], :].T, time='Time', replicate='rep',
+                          reference_labels=['condition', 'Time'], log2=False)
+
+    neg_dea = DEAnalysis(data.sort_index().loc[idx[:, :, 'high_neg', t], :].T, time='Time', replicate='rep',
+                                     reference_labels=['condition', 'Time'], log2=False)
+
     # Censored object
     dea = DEAnalysis(data.sort_index().loc[idx[:, :, perturb, t], :].T, time='Time', replicate='rep',
                      reference_labels=['condition', 'Time'], log2=False)
 
     dea.fit_contrasts()
+    neg_dea.to_pickle('intermediate_data/strongly_connected_highneg_dea.pkl')
+    full_dea.to_pickle('intermediate_data/strongly_connected_fulltime_dea.pkl')
+    steady_dea.to_pickle('intermediate_data/strongly_connected_steady_fulltime_dea.pkl')
+    steady_censored_dea.to_pickle('intermediate_data/strongly_connected_steady_dea.pkl')
     dea.to_pickle('intermediate_data/strongly_connected_dea.pkl')
