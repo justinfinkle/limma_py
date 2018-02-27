@@ -8,8 +8,9 @@ from pydiffexp import DEAnalysis
 pd.set_option('display.width', 250)
 dea = pd.read_pickle('intermediate_data/strongly_connected_dea.pkl')        # type: DEAnalysis
 der = dea.results['ko-wt']
-scores = der.score_clustering()
-scores = scores.loc[der.top_table()['adj_pval'] < 0.05]
+p_results = pd.read_pickle('intermediate_data/strongly_connected_ptest.pkl')
+
+scores = p_results.loc[(der.top_table()['adj_pval'] < 0.05) & (p_results['p_value'] < 0.05)]
 
 # Remove clusters that have no dynamic DE (i.e. all 1, -1, 0)
 interesting = scores.loc[scores.Cluster.apply(ast.literal_eval).apply(set).apply(len) > 1]

@@ -45,8 +45,10 @@ def get_scores(grouped_df, de_df, weighted_df):
     :return: df
     """
     scores = pd.DataFrame(grouped_df.apply(group_scores, de_df, weighted_df))
-    scores.index.set_names('gene', level=1, inplace=True)
+    if 'gene' not in scores.index.names:
+        scores.index.set_names('gene', level=1, inplace=True)
     scores = scores.reset_index().sort_values(['Cluster', 'score'], ascending=[False, False]).set_index('gene')
+    scores.fillna(0, inplace=True)
     return scores
 
 
