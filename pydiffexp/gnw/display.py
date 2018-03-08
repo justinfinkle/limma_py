@@ -48,7 +48,7 @@ def draw_net(g, dpi=300, **kwargs):
     return img
 
 
-def draw_results(data: pd.DataFrame, perturb, times=None, g=None, axarr=None, **kwargs):
+def draw_results(data: pd.DataFrame, perturb, titles, times=None, samey=True, g=None, axarr=None, **kwargs):
     """
 
     :param data:
@@ -82,18 +82,19 @@ def draw_results(data: pd.DataFrame, perturb, times=None, g=None, axarr=None, **
             ax.imshow(net_img)
             ax.get_xaxis().set_visible(False)
             ax.get_yaxis().set_visible(False)
+            ax.axis('off')
         else:
             dep.tsplot(draw_data.loc[nodes[ii-show_net]], ax=ax, subgroup='Time', legend=False,
                        mean_line_dict={'ls': '--'})
             ax.set_ylabel('Normalized Expression')
-            ax.set_ylim([0, y_max])
-            ax.set_xlim([0, 500])
+            if samey:
+                ax.set_ylim([0, y_max])
             # ax.set_xlabel('')
-            ax.set_title('')
-            if ii > 0:
+            ax.set_title(titles[ii-1])
+            if ii > 1:
                 ax.get_yaxis().set_visible(False)
 
-            if ii != 0:
+            if ii > 0:
                 ax.set_ylabel('')
 
     return axarr

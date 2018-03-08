@@ -5,7 +5,6 @@ import warnings
 from collections import Counter
 from typing import Dict
 
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import rpy2.robjects as robjects
@@ -609,11 +608,13 @@ class DEAnalysis(object):
         if voom:
             r_data = rh.pydf_to_rmat(self.data)
             voom_results = rh.unpack_r_listvector(limma.voom(r_data, save_plot=True))
-            print(voom_results['voom_xy'])
-            plt.plot(voom_results['voom_xy']['x'], voom_results['voom_xy']['y'], '.')
-            plt.plot(voom_results['voom_line']['x'], voom_results['voom_line']['y'])
-            plt.show()
-            sys.exit()
+
+            # Plot voom results
+            # print(voom_results['voom_xy'])
+            # plt.plot(voom_results['voom_xy']['x'], voom_results['voom_xy']['y'], '.')
+            # plt.plot(voom_results['voom_line']['x'], voom_results['voom_line']['y'])
+            # plt.show()
+            # sys.exit()
             data = voom_results['E']
         else:
             # Log transform expression and correct values if needed
